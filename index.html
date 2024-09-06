@@ -3,63 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>爱心雨效果</title>
+    <title>漂浮爱心点击计数器</title>
     <style>
         body {
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
             background-color: #f0f8ff;
+            text-align: center;
+            padding: 50px;
             overflow: hidden;
+            position: relative;
         }
 
         h1 {
-            position: absolute;
-            color: #333;
             font-size: 48px;
+            color: #ff1493;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
         }
 
         .heart {
             position: absolute;
+            font-size: 40px;
             color: red;
-            font-size: 24px;
-            animation: fall 5s linear infinite;
+            cursor: pointer;
+            animation: float 5s ease-in-out infinite;
         }
 
-        @keyframes fall {
+        @keyframes float {
             0% {
-                top: -50px;
-                opacity: 1;
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-200px);
             }
             100% {
-                top: 100vh;
-                opacity: 0;
+                transform: translateY(0);
             }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        #counter {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #ff4500;
+        }
+
+        #message {
+            font-size: 32px;
+            color: #ff0000;
+            margin-top: 20px;
+            display: none;
+        }
+
+        body::before {
+            content: "❤️";
+            font-size: 120px;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            color: rgba(255, 0, 0, 0.1);
         }
     </style>
 </head>
 <body>
 
-    <h1>张雨是大傻逼</h1>
+    <h1>点击漂浮的爱心</h1>
+    <p>点击20次爱心后会出现惊喜消息！</p>
+
+    <div id="heartContainer"></div>
+    <div id="counter">爱心点击数：0</div>
+    <div id="message">张雨是大笨蛋！</div>
 
     <script>
+        let counter = 0;
+        const totalHearts = 20;
+        const heartContainer = document.getElementById("heartContainer");
+        const counterDisplay = document.getElementById("counter");
+        const messageDisplay = document.getElementById("message");
+
         function createHeart() {
-            const heart = document.createElement('div');
-            heart.classList.add('heart');
-            heart.innerText = '❤️';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.animationDuration = Math.random() * 2 + 3 + 's';
-            document.body.appendChild(heart);
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤️";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = Math.random() * 3 + 3 + "s";
+            heart.addEventListener("click", () => {
+                heart.remove();
+                counter++;
+                updateCounter();
+                if (counter === totalHearts) {
+                    messageDisplay.style.display = "block";
+                }
+            });
+            heartContainer.appendChild(heart);
 
             setTimeout(() => {
                 heart.remove();
             }, 5000);
         }
 
-        setInterval(createHeart, 300);
+        function updateCounter() {
+            counterDisplay.innerHTML = `爱心点击数：${counter}`;
+        }
+
+        setInterval(createHeart, 400);
     </script>
 
 </body>
